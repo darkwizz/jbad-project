@@ -14,3 +14,15 @@ $ git clone <repo-url>/jbad-project.git
 $ cd jbad-project
 $ pip install -r requirements.txt
 ```
+
+---
+
+
+### Changelog
+
+
+#### Version 0
+
+* no split on different components, only client is implemented;
+* client reads from previously prepared dataset for several regions and supports historical data visualization;
+* client is console;
