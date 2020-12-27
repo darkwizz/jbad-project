@@ -17,11 +17,9 @@ $ pip install -r requirements.txt
 
 ---
 
-
 ### Changelog
 
-
-#### Version 0
+#### Version 0 (in progress)
 
 * no split on different components, only client is implemented;
 * client reads from previously prepared dataset for several regions and supports historical data visualization;

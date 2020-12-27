@@ -1,3 +1,5 @@
+import os
+
 
 def print_menu():
     menu = """
@@ -10,10 +12,11 @@ def print_menu():
 
 def app_exit():
     print('Quitting...')
+    print('GOODBYE')
+    exit(0)
 
 
 def clear_scr():
-    import os
     clear_cmd = 'clear' if os.name == 'posix' else 'cls'
     os.system(clear_cmd)
 
@@ -55,15 +58,20 @@ FUNCTIONS = {
 }
 
 
+def incorrect_choice():
+    print('No such option')
+
+
 def main(*args):
-    choice = None
-    while choice != 0:
+    import time
+
+    while True:
         clear_scr()
         print_menu()
         choice = input("Choose one option: ")
         func = FUNCTIONS.get(choice, incorrect_choice)
         func()
-    print('GOODBYE')
+        time.sleep(5)
 
 
 if __name__ == '__main__':
