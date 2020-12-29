@@ -2,11 +2,14 @@ import citylist
 from datasource import jsonweather
 
 import os
+import matplotlib.pyplot as plt
 
 
 class Session:
-    def __init__(self):
+    def __init__(self, datasource):
         self._cities_list = get_available_regions()
+        self._data = datasource
+        self.current_column = None
     
     def get_top_regions(self, top_n=10):
         return self._cities_list[:top_n]
@@ -15,6 +18,10 @@ class Session:
         if index < 0 or index > len(self._cities_list):
             raise IndexError('No city with this index')
         return self._cities_list[index]
+    
+    @property
+    def data(self):
+        return self._data
 
 
 def print_menu():
@@ -58,18 +65,28 @@ def show_region_weather(session):
         return
     region_index = int(choice_str)
     region = session.get_region(region_index)
-    region_weather = get_region_weather(region.get_city_id())
-    visualize_region_weather(region_weather)
+    region_weather = get_region_weather(session, region.get_city_id())
+    visualize_region_weather(region_weather, session.current_column)
 
 
-def get_region_weather(region_id):
-    json_path = jsonweather.get_weather_json_path()
-    data = jsonweather.read_weather_json(json_path)
-    return data.get_today_hourly()
+def get_region_weather(session, region_id):
+    weather_columns = session.data.get_hourly_weather_columns()
+    session.current_column = weather_columns[0]
+    weather = session.data.get_today_hourly_column(weather_columns[0])
+    return weather
 
 
-def visualize_region_weather(region_weather):
-    print(region_weather)
+def visualize_region_weather(region_weather, column_name):
+    sorted_weather = sorted(region_weather)
+    X = sorted_weather
+    Y = [region_weather[hour] for hour in X]
+    plt.plot(X, Y)
+    plt.xlabel('Hours')
+    plt.ylabel(column_name)
+    # plt.legend()
+    # plt.show()  # requires some GUI matplotlib backend
+    plot_path = 'weather_plot.png'
+    plt.savefig(plot_path)  # when matplotlib backend is non-GUI (like 'agg')
 
 
 FUNCTIONS = {
@@ -86,7 +103,9 @@ def incorrect_choice(*args):
 def main(*args):
     import time
 
-    session = Session()
+    json_path = jsonweather.get_weather_json_path()
+    data = jsonweather.read_weather_json(json_path)
+    session = Session(data)
     while True:
         try:
             clear_scr()
@@ -94,8 +113,8 @@ def main(*args):
             choice = input("Choose one option: ")
             func = FUNCTIONS.get(choice, incorrect_choice)
             func(session)
-        except Exception as ex:
-            print(ex)
+        except (ValueError, TypeError) as err:
+            print(err)
         time.sleep(5)
 
 
