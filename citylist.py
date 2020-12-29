@@ -23,6 +23,11 @@ class WeatherAPICity:
         name = city.get('name', None)
         return name
     
+    def get_city_searchname(self):
+        city = self._city_dict.get('city', {})
+        name = city.get('findname', None)
+        return name
+    
     def __str__(self):
         return f'{self.get_city_name()}'
 
