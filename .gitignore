@@ -143,6 +143,9 @@ cython_debug/
 # VS Code
 .vscode/
 
+# images
+*.png
+*.jpg
 
 # .key
 *.key
