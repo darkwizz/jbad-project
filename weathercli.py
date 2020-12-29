@@ -1,11 +1,13 @@
+import citylist
+
 import os
 
 
 def print_menu():
-    menu = """
-    1 - get regions list;
-    2 - show weather stats for a region;
-    0 - exit;
+    menu = \
+    """1 - get regions list;
+2 - show weather stats for a region;
+0 - exit;
     """
     print(menu)
 
@@ -30,7 +32,9 @@ def print_regions_list():
 
 
 def get_available_regions():
-    return []
+    citylist_path = citylist.get_city_list_json_path()
+    cities = citylist.get_city_list(citylist_path)
+    return cities
 
 
 def show_region_weather():
