@@ -25,11 +25,19 @@ $ pip install -r requirements.txt
 
 ### Changelog
 
-#### Version 0 (working)
+#### Version 0.2 (in progress)
 
-* no split on different components, only client is implemented;
+* start separating on components - _client_, _server_ (on this version is called directly from a corresponding client proxy), **data access**, **data manipulation**;
+* client `.py` config, which is going to read from ENV;
+* _server_ talks to **data access** (on this version is called directly by a server proxy);
+* _client_ uses **data manipulation** API, has a proxy for server communication;
+* client proxy is responsible for preparing a complete dataset for _client_. For _client_ it is completely transparent how data is downloaded from _server_;
+
+#### Version 0.1
+
+* no split on different components, only client draft (very poor) is implemented;
 * client reads from previously prepared dataset for several regions and supports data visualization;
 * client is console;
 * no direct Weather API calls;
 
-![Visualization demo](./resources/weather_plot.png)
+![Visualization demo](./resources/v0.1-demo.png)
