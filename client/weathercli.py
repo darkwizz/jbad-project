@@ -1,5 +1,6 @@
 import citylist
 from datasource import jsonweather
+from errors import ClientError, DataSynchronizationError
 
 import time
 import os
@@ -22,12 +23,10 @@ def wait():
 def read_items_index(items_len, item_name):
     choice = input(f'Enter {item_name} index: ')
     if not choice.isnumeric():
-        print('Must be a number')
-        return None
+        raise ClientError('Must be a number')
     choice = int(choice)
     if choice < 1 or choice > items_len:
-        print(f'{item_name.capitalize()} index must be in the proper range')
-        return None
+        raise ClientError(f'{item_name.capitalize()} index must be in the proper range')
     return choice
 
 
@@ -62,22 +61,16 @@ class Client:
     def _print_loaded_cities(self):
         cities = self._session.get('cities', None)
         if cities is None:
-            print('No cities loaded. Load them first')
-            return
+            raise ClientError('No cities loaded. Load them first')
         for i, city in enumerate(cities):
             print(f'{i + 1}. {city}')
     
-    # TODO replace all `return(errorMsg)` with `raise SomeError`, define
-    # exceptions
     def _load_city_weather(self):
         cities = self._session.get('cities', [])
         if len(cities) == 0:
-            print('No available or loaded cities')
-            return
+            raise ClientError('No available or loaded cities')
         
         city_index = read_items_index(len(cities), 'city')
-        if city_index is None:
-            return
         city = cities[city_index - 1]
         weather = self._server_proxy.load_city_weather(city)
         data_hash = self._data_manipulator.update_data(weather)
@@ -86,11 +79,9 @@ class Client:
     def _visualize_last_lodaded_weather(self):
         last_data_hash = self._session.get('loaded_data_hash', None)
         if not last_data_hash:
-            print('No weather loaded')
-            return
+            raise ClientError('No weather loaded')
         if last_data_hash != self._data_manipulator.data_hash:
-            print('Loaded data is not synchronized with visualizer')
-            return
+            raise DataSynchronizationError('Loaded data is not synchronized with visualizer')
         
         print('Available parameters:')
         params_list = self._data_manipulator.get_parameters_list()
@@ -103,13 +94,16 @@ class Client:
     
     def run(self):
         while True:
-            clear_scr()
-            print_menu(self.main_menu_items)
-            choice = input('Choose option: ')
-            if choice == '0':
-                break
-            func = self._functions.get(choice, incorrect_choice)
-            func()
+            try:
+                clear_scr()
+                print_menu(self.main_menu_items)
+                choice = input('Choose option: ')
+                if choice == '0':
+                    break
+                func = self._functions.get(choice, incorrect_choice)
+                func()
+            except ClientError as ex:
+                print(ex)
             wait()
         print('Quitting...')
         print('GOODBYE')
