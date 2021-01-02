@@ -17,11 +17,13 @@ $ pip install -r requirements.txt
 
 ---
 
-### API used
+### External API used
 
 1. [Weather API](https://openweathermap.org/);
 
 ---
+
+
 
 ### Changelog
 

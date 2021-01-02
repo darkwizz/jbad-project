@@ -12,18 +12,18 @@ class DataManipulator:
     Input parameters:
     - data - dict or list
     """
-        self._data = self._process_input_data(data)
+        self._data = DataManipulator._process_input_data(data, self.date_column)
     
     @property
     def date_column(self):
-        return 'dt'
+        return 'datetime'
     
     @property
     def data_hash(self):
         return id(self._data)
     
     def update_data(self, data):
-        self._data = self._process_input_data(data)
+        self._data = DataManipulator._process_input_data(data, self.date_column)
         return self.data_hash
     
     def get_parameters_list(self):
@@ -60,9 +60,10 @@ class DataManipulator:
         return dir_exists and extenstion_correct
 
     @staticmethod
-    def _process_input_data(data):
-        datetime_columns = ['dt', 'sunrise', 'sunset']
+    def _process_input_data(data, date_column):
+        datetime_columns = ['sunrise', 'sunset']
         df = pd.DataFrame(data)
+        df[date_column] = pd.to_datetime(df[date_column])
         for dt_col in datetime_columns:
             df[dt_col] = df[dt_col].apply(lambda x: dt.datetime.fromtimestamp(x))
         return df
