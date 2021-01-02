@@ -10,12 +10,32 @@ To prepare the environment:
 
 ```bash
 $ virtualenv -p=/usr/bin/python3.8 jbad-project-env
+$ cd jbad-project-env
+$ source bin/activate
 $ git clone <repo-url>/jbad-project.git
 $ cd jbad-project
 $ pip install -r requirements.txt
 ```
 
+To set up extra variables to be able to run `ProxyStub` check (city list and demo DB `.json` paths are initialized)
+
+```bash
+(jbad-project-env) $ pwd
+# should be inside jbad-project
+(jbad-project-env) $ source init-vars.sh
+```
+
+To be able to run any `.py` in the project tree (not only `visualweather.py`, which is the entrypoint though), initialize `site-packages` with necessary paths. To be able to get the expected result, one should be under `virtualenv` and have `__init__.py` in each subpackage:
+
+```bash
+(jbad-project-env) $ ./init-paths.sh
+```
+
 ---
+
+
+
+
 
 ### External API used
 
@@ -42,8 +62,6 @@ $ pip install -r requirements.txt
 ```
 
 ---
-
-
 
 ### Changelog
 
