@@ -12,3 +12,7 @@ class ServerError(Exception):
 
 class NoSuchCityError(ServerError):
     pass
+
+
+class NoWeatherForCity(ServerError):
+    pass

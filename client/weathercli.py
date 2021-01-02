@@ -1,4 +1,4 @@
-from errors import ClientError, DataSynchronizationError
+from errors import ClientError, DataSynchronizationError, ServerError
 
 import time
 
@@ -50,7 +50,7 @@ class Client:
         }
     
     def _load_city_list(self):
-        cities = self._server_proxy.load_cities()
+        cities = self._server_proxy.load_available_cities()
         self._session['cities'] = cities
         print(f'Loaded {len(cities)} available cities')
     
@@ -59,7 +59,7 @@ class Client:
         if cities is None:
             raise ClientError('No cities loaded. Load them first')
         for i, city in enumerate(cities):
-            print(f'{i + 1}. {city}')
+            print(f'{i + 1}. {city['name']}')
     
     def _load_city_weather(self):
         cities = self._session.get('cities', [])
@@ -68,7 +68,7 @@ class Client:
         
         city_index = read_items_index(len(cities), 'city')
         city = cities[city_index - 1]
-        weather = self._server_proxy.load_city_weather(city)
+        weather = self._server_proxy.load_city_weather(city['id'])
         data_hash = self._data_manipulator.update_data(weather)
         self._session['loaded_data_hash'] = data_hash
     
@@ -98,7 +98,7 @@ class Client:
                     break
                 func = self._functions.get(choice, incorrect_choice)
                 func()
-            except ClientError as ex:
+            except (ClientError, ServerError) as ex:
                 print(ex)
             wait()
         print('Quitting...')

@@ -31,18 +31,33 @@ for city in cities:
     if response.status_code // 200 == 1:
         resp_obj = json.loads(response.text)
         hourly = resp_obj['hourly']
+        current = resp_obj['current']
+        item_to_remove = None
         for item in hourly:
-            item['datetime'] = str(datetime.fromtimestamp(item['dt']))
+            dt = datetime.fromtimestamp(item['dt'])
+            if dt.hour == 0:
+                item_to_remove = item
+            item['datetime'] = str(dt)
+            item['sunrise'] = current['sunrise']
+            item['sunset'] = current['sunset']
             del item['weather']
             del item['dt']
+            if 'wind_gust' in item:
+                del item['wind_gust']
+        if item_to_remove is not None:
+            hourly.remove(item_to_remove)
         print(city)
         db[city.get_city_id()] = {
             'city': city.asdict(),
             'hourly': hourly
         }
-with open('../hourly.json', 'w') as hourly_json:
-    json.dump(db, hourly_json, indent=5)
-    print('SUCCESS')
+hourly_path = os.getenv('WEATHERDB', None)
+if hourly_path is None:
+    print('Path in the WEATHERDB var is not set')
+else:
+    with open('../hourly.json', 'w') as hourly_json:
+        json.dump(db, hourly_json, indent=5)
+        print('SUCCESS')
 
 # response_body = json.loads(response.text)
 # if response.status_code // 200 == 1:
