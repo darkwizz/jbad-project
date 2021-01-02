@@ -47,17 +47,17 @@ To be able to run any `.py` in the project tree (not only `visualweather.py`, wh
 
 ```json
 {
-  "temp",  // current temperature
-  "feels_like",  // human perception of the temperature
-  "pressure",
-  "humidity",
-  "visibility",
-  "wind_speed",
-  "wind_direction_degree",
-  "cloudness",
-  "datetime",  // datetime type
-  "sunrise",  // timestamp
-  "sunset",  // timestamp
+  "temp": "current temperature, in Celcius",
+  "feels_like": "human perception of the temperature",
+  "pressure": "in hPa",
+  "humidity": "in %",
+  "visibility": "average visibility, in meters",
+  "wind_speed": "metre/sec",
+  "wind_direction_degree": "degrees",
+  "cloudness": "%",
+  "datetime": "datetime type",
+  "sunrise": "timestamp",
+  "sunset": "timestamp"
 }
 ```
 
