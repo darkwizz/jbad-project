@@ -7,7 +7,8 @@ class WeatherAPICity:
         self._city_dict = city_dict or {}
     
     def get_city_id(self):
-        city_id = self._city_dict.get('id', {})
+        city = self._city_dict.get('city', {})
+        city_id = city.get('id', {})
         id_value = city_id.get('$numberLong', None)
         return id_value
     
@@ -28,8 +29,17 @@ class WeatherAPICity:
         name = city.get('findname', None)
         return name
     
+    def asdict(self):
+        lon, lat = self.get_city_lon_lat()
+        return {
+            'id': self.get_city_id(),
+            'name': self.get_city_name(),
+            'lon': lon,
+            'lat': lat
+        }
+    
     def __str__(self):
-        return f'{self.get_city_name()}'
+        return f'{self.get_city_name()} : {self.get_city_id()}'
 
 
 def get_city_list(city_list_json_path):

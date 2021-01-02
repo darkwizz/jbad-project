@@ -23,6 +23,26 @@ $ pip install -r requirements.txt
 
 ---
 
+### Data internal format
+
+```json
+{
+  "temp",  // current temperature
+  "feels_like",  // human perception of the temperature
+  "pressure",
+  "humidity",
+  "visibility",
+  "wind_speed",
+  "wind_direction_degree",
+  "cloudness",
+  "datetime",  // datetime type
+  "sunrise",  // timestamp
+  "sunset",  // timestamp
+}
+```
+
+---
+
 
 
 ### Changelog
