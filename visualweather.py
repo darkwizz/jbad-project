@@ -1,11 +1,16 @@
 from client.weathercli import Client as ConsoleClient
+from client.datamanipulation import DataManipulator
+from client.proxies.stub import ProxyStub
 
 import argparse
 
 
+def gui_client(*args):
+    raise NotImplemented('GUI client is not implemented')
+
 CLIENT_CHOICES = {
     'cli': ConsoleClient,
-    'gui': lambda *args: print('NOT IMPLEMENTED')
+    'gui': gui_client
 }
 
 
@@ -18,7 +23,10 @@ def main():
     print('WELCOME IN VISUALWEATHER APP')
     print(f'Selected client type is {args.client}')
     client_cls = CLIENT_CHOICES[args.client]
-    # client = client_cls(server_proxy, data_manipulator)
+    data_manipulator = DataManipulator()
+    proxy = ProxyStub()
+    client = client_cls(proxy, data_manipulator)
+    client.run()
 
 
 if __name__ == '__main__':

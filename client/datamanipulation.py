@@ -57,6 +57,10 @@ class DataManipulator:
         # plt.legend()
         # plt.show()  # requires some GUI matplotlib backend
         plt.savefig(save_path)  # when matplotlib backend is non-GUI (like 'agg')
+    
+    def __len__(self):
+        length = len(self._data) if self._data is not None else 0
+        return length
 
     @staticmethod
     def _visualization_path_valid(path):

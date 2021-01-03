@@ -1,6 +1,7 @@
 from errors import ClientError, DataSynchronizationError, ServerError
 
 import time
+import os
 
 
 def print_menu(menu_items):
@@ -13,17 +14,31 @@ def incorrect_choice(*args):
 
 
 def wait():
+    print('Waiting...')
     time.sleep(5)
 
 
+def clear_scr():
+    if os.name == 'posix':
+        os.system('clear')
+
+
 def read_items_index(items_len, item_name):
-    choice = input(f'Enter {item_name} index: ')
+    choice = input(f'Enter {item_name} index (or "{CANCEL_CHOICE}" to go back to the main menu): ')
+    if choice == CANCEL_CHOICE:
+        return choice
     if not choice.isnumeric():
         raise ClientError('Must be a number')
     choice = int(choice)
     if choice < 1 or choice > items_len:
         raise ClientError(f'{item_name.capitalize()} index must be in the proper range')
     return choice
+
+
+CANCEL_CHOICE = 'cancel'
+def read_visualization_save_path():
+    save_path = input(f'Enter visualization save path (or "{CANCEL_CHOICE}" to go back to the main menu): ')
+    return save_path
 
 
 class Client:
@@ -36,7 +51,7 @@ class Client:
     ]
 
     def __init__(self, server_proxy, data_manipulator):
-        if not server_proxy or not data_manipulator:
+        if server_proxy is None or data_manipulator is None:
             raise ValueError('Server proxy and data manipulation component should be defined')
 
         self._server_proxy = server_proxy
@@ -59,7 +74,7 @@ class Client:
         if cities is None:
             raise ClientError('No cities loaded. Load them first')
         for i, city in enumerate(cities):
-            print(f'{i + 1}. {city['name']}')
+            print(f'{i + 1}. {city["name"]}')
     
     def _load_city_weather(self):
         cities = self._session.get('cities', [])
@@ -67,10 +82,13 @@ class Client:
             raise ClientError('No available or loaded cities')
         
         city_index = read_items_index(len(cities), 'city')
+        if city_index == CANCEL_CHOICE:
+            return
         city = cities[city_index - 1]
         weather = self._server_proxy.load_city_weather(city['id'])
         data_hash = self._data_manipulator.update_data(weather)
         self._session['loaded_data_hash'] = data_hash
+        print(f'Loaded {len(self._data_manipulator)} rows')
     
     def _visualize_last_lodaded_weather(self):
         last_data_hash = self._session.get('loaded_data_hash', None)
@@ -86,6 +104,8 @@ class Client:
         param_index = read_items_index(len(params_list), 'parameter')
         param = params_list[param_index - 1]
         save_path = read_visualization_save_path()
+        if save_path == CANCEL_CHOICE:
+            return
         self._data_manipulator.visualize_weather_parameter(param, save_path=save_path)
     
     def run(self):
