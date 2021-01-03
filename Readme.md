@@ -33,10 +33,6 @@ To be able to run any `.py` in the project tree (not only `visualweather.py`, wh
 
 ---
 
-
-
-
-
 ### External API used
 
 1. [Weather API](https://openweathermap.org/);
@@ -65,13 +61,25 @@ To be able to run any `.py` in the project tree (not only `visualweather.py`, wh
 
 ### Changelog
 
-#### Version 0.2 (in progress)
+#### Version 0.3 (in progress)
+
+* _server_ is running and handling requests from the client proxy;
+* **data access** is defined and used by _server_;
+* `ServerProxy` is implemented and sends requests to _server_;
+* a script which should retrieve and store weather data is prepared and can be set up to be executed periodically;
+
+#### Version 0.2
 
 * start separating on components - _client_, _server_ (on this version is called directly from a corresponding client proxy), **data access**, **data manipulation**;
 * client `.py` config, which is going to read from ENV;
-* _server_ talks to **data access** (on this version is called directly by a server proxy);
+* _server_ talks to **data access**;
 * _client_ uses **data manipulation** API, has a proxy for server communication;
 * client proxy is responsible for preparing a complete dataset for _client_. For _client_ it is completely transparent how data is downloaded from _server_;
+* no server communication here;
+
+![CLI demonstration](./resources/v0.2-demo-cli.png)
+
+![Wind direction degrees graph demo](./resources/v0.2-demo-graph.png)
 
 #### Version 0.1
 
