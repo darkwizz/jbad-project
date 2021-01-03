@@ -1,6 +1,7 @@
 from client.weathercli import Client as ConsoleClient
 from client.datamanipulation import DataManipulator
 from client.proxies.stub import ProxyStub
+from client import config
 
 import argparse
 
@@ -23,8 +24,8 @@ def main():
     print('WELCOME IN VISUALWEATHER APP')
     print(f'Selected client type is {args.client}')
     client_cls = CLIENT_CHOICES[args.client]
-    data_manipulator = DataManipulator()
-    proxy = ProxyStub()
+    data_manipulator = config.get_data_processor()
+    proxy = config.get_proxy()
     client = client_cls(proxy, data_manipulator)
     client.run()
 

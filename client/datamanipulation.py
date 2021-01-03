@@ -7,6 +7,8 @@ from errors import ClientError
 
 
 class DataManipulator:
+    _datetime_columns = ['sunrise', 'sunset']
+
     def __init__(self, data=None):
         """
         Input parameters:
@@ -35,7 +37,8 @@ class DataManipulator:
         if self._data is None:
             raise ClientError('Initialize data first')
         data_columns = self._data.columns
-        result = list(filter(lambda x: x != self.date_column, data_columns))
+        ignored_columns = self._datetime_columns + [self.date_column]
+        result = list(filter(lambda x: x not in ignored_columns, data_columns))
         return result
 
     def visualize_weather_parameter(self, parameter, save_path=''):
@@ -57,6 +60,7 @@ class DataManipulator:
         # plt.legend()
         # plt.show()  # requires some GUI matplotlib backend
         plt.savefig(save_path)  # when matplotlib backend is non-GUI (like 'agg')
+        plt.clf()
     
     def __len__(self):
         length = len(self._data) if self._data is not None else 0
@@ -75,9 +79,10 @@ class DataManipulator:
 
     @staticmethod
     def _process_input_data(data, date_column):
-        datetime_columns = ['sunrise', 'sunset']
+        datetime_columns = DataManipulator._datetime_columns
         df = pd.DataFrame(data)
         df[date_column] = pd.to_datetime(df[date_column])
+        df.dropna(axis=1, inplace=True)
         for dt_col in datetime_columns:
             df[dt_col] = df[dt_col].apply(lambda x: dt.datetime.fromtimestamp(x))
         return df
