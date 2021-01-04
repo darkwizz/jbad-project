@@ -64,8 +64,8 @@ To be able to run any `.py` in the project tree (not only `visualweather.py`, wh
 #### Version 0.3 (in progress)
 
 * _server_ is running and handling requests from the client proxy;
-* **data access** is defined and used by _server_;
-* `ServerProxy` is implemented and sends requests to _server_;
+* **data access** is defined and used by __data server__. Dispatcher _server_ (the one which handles client requests) calls **data servers** (model server) and retrieves necessary data;
+* `ServerProxy` on the client side is implemented and sends requests to _server_;
 * a script which should retrieve and store weather data is prepared and can be set up to be executed periodically;
 
 #### Version 0.2
