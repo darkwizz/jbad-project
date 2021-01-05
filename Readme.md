@@ -48,9 +48,9 @@ To be able to run any `.py` in the project tree (not only `visualweather.py`, wh
   "pressure": "in hPa",
   "humidity": "in %",
   "visibility": "average visibility, in meters",
-  "wind_speed": "metre/sec",
+  "wind_speed": "in meter/sec",
   "wind_direction_degree": "degrees",
-  "cloudness": "%",
+  "cloudness": "in %",
   "datetime": "datetime type",
   "sunrise": "timestamp",
   "sunset": "timestamp"
