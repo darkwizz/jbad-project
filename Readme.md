@@ -17,6 +17,27 @@ $ cd jbad-project
 $ pip install -r requirements.txt
 ```
 
+To prepare the env for the server side:
+
+```bash
+# if currently under jbad-project-env virtualenv
+(jbad-project-env) $ deactivate
+# in the project directory
+$ virtualenv -p=/usr/bin/python3.8 server-env
+$ source server-env/bin/activate
+$ cd server
+$ pip install -r requirements.txt
+```
+
+and start the dev server locally:
+
+```bash
+(server-env) jbad-project/server$ ./start-server.sh
+```
+
+![Dev server demo](./resources/dev-server-demo.png)
+
+
 To set up extra variables to be able to run `ProxyStub` check (city list and demo DB `.json` paths are initialized)
 
 ```bash
