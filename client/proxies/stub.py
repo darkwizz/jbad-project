@@ -1,5 +1,5 @@
 import citylist
-from errors import NoSuchCityError, NoWeatherForCity
+from errors import NoSuchCityError, NoWeatherForCityError
 
 import os
 import json
@@ -28,7 +28,7 @@ class ProxyStub:
         city = filtered[0]
         record = self._db.get(city.get_city_id(), None)
         if record is None:
-            raise NoWeatherForCity('No weather data for the city')
+            raise NoWeatherForCityError('No weather data for the city')
         weather = record.get('hourly', [])
         return weather
 
