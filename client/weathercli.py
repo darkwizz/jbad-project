@@ -102,6 +102,8 @@ class Client:
         for i, param in enumerate(params_list):
             print(f'{i + 1}. {param}')
         param_index = read_items_index(len(params_list), 'parameter')
+        if param_index == CANCEL_CHOICE:
+            return
         param = params_list[param_index - 1]
         save_path = read_visualization_save_path()
         if save_path == CANCEL_CHOICE:

@@ -1,5 +1,7 @@
 import urllib.parse as urlparse
+import os
 from urllib.error import URLError
+from redis import Redis
 
 
 def url_valid(url):
@@ -9,22 +11,35 @@ def url_valid(url):
     return True
 
 
+STORAGE_HOST_ENV = 'STORAGE_HOST'
+STORAGE_PORT_ENV = 'STORAGE_PORT'
 def get_key_storage_proxy():
-    return KeyStorageProxy('localhost:6379')
+    storage_host = os.getenv(STORAGE_HOST_ENV, 'localhost')
+    storage_port = os.getenv(STORAGE_PORT_ENV, '6379')
+    return KeyStorageProxy(storage_host, int(storage_port))
 
 
 class KeyStorageProxy:
-    def __init__(self, storage_address):
-        self._storage_address = storage_address
+    def __init__(self, storage_host, storage_port):
+        self._redis = Redis(storage_host, storage_port, decode_responses=True)
     
     def get_available_model_servers(self):
-        return [{
-            'id': 755889,
-            'name': 'Wieliczka'
-        }]
+        servers = self._redis.keys('city_*')
+        result = []
+        for server_id in servers:
+            if self._redis.type(server_id) != 'hash':
+                continue
+
+            name, server_id = self._redis.hmget(server_id, 'name', 'id')
+            result.append({
+                'id': server_id,
+                'name': name
+            })
+        return result
     
     def get_model_server_address(self, server_id):
-        return 'http://localhost:7722'
+        server_url = self._redis.hget(f'city_{server_id}', 'url')
+        return server_url
 
 
 class ModelProxy:
