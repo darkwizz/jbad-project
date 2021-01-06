@@ -37,7 +37,6 @@ and start the dev server locally:
 
 ![Dev server demo](./resources/dev-server-demo.png)
 
-
 To set up extra variables to be able to run `ProxyStub` check (city list and demo DB `.json` paths are initialized)
 
 ```bash
@@ -82,12 +81,18 @@ To be able to run any `.py` in the project tree (not only `visualweather.py`, wh
 
 ### Changelog
 
-#### Version 0.3 (in progress)
+#### Version 0.4 (in progress)
 
-* _server_ is running and handling requests from the client proxy;
-* **data access** is defined and used by __data server__. Dispatcher _server_ (the one which handles client requests) calls **data servers** (model server) and retrieves necessary data;
-* `ServerProxy` on the client side is implemented and sends requests to _server_;
 * a script which should retrieve and store weather data is prepared and can be set up to be executed periodically;
+* key storage logic is implemented on the _dispatcher server_ side;
+* add some default data to model server requests;
+* connect _dispatcher server_ and **model server**;
+
+#### Version 0.3
+
+* _dispatcher server_ is running and handling requests from the client proxy;
+* **model server** is defined. _Dispatcher server_ (the one which handles client requests) calls **model servers** and retrieves necessary data;
+* `ServerProxy` on the client side is implemented and sends requests to _server_;
 
 #### Version 0.2
 
