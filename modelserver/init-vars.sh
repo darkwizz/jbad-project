@@ -1,5 +1,12 @@
 #!/bin/bash
+export STORAGE_HOST=localhost
+export STORAGE_PORT=6379
 export CITY_ID=3094802
+export CITY_NAME=Krakow
+export MODEL_SERVER_URL=localhost:7722
+export EXPIRE_TIME_MINUTES=30
+export REFRESH_TIME_MINUTES=5  # 15
+
 
 API_KEY_PATH=../weather-api.key
 if [[ -f $API_KEY_PATH ]] ; then
