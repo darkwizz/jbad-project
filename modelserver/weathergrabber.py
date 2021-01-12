@@ -1,6 +1,7 @@
 import requests
 import os
 from datetime import datetime
+import json
 
 
 def get_api_key():
@@ -65,8 +66,18 @@ def get_processed_weather_data(weather_data):
     dt = weather.get('datetime', None)
     if not dt:
         return None
-    weather['datetime'] = datetime.fromtimestamp(dt)
+    weather['datetime'] = str(datetime.fromtimestamp(dt))
     return weather_data
+
+
+def save_weather_into_db(data):
+    db_dir = os.getenv('WEATHER_DB_PATH')
+    if not os.path.exists(db_dir):
+        os.mkdir(db_dir)
+
+    db_file = os.path.join(db_dir, data['weather']['datetime'] + '.json')
+    with open(db_file, 'w') as weather_json:
+        json.dump(data, weather_json, indent=3)
 
 
 api_key = get_api_key()
@@ -79,4 +90,4 @@ if response.status_code // 200 == 1:
     body = response.json()
     preprocessed_data = get_preprocessed_raw_weather_data(body)
     processed_data = get_processed_weather_data(preprocessed_data)
-    print(processed_data)
+    save_weather_into_db(processed_data)
