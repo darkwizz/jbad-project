@@ -74,10 +74,16 @@ def save_weather_into_db(data):
     db_dir = os.getenv('WEATHER_DB_PATH')
     if not os.path.exists(db_dir):
         os.mkdir(db_dir)
-
-    db_file = os.path.join(db_dir, data['weather']['datetime'] + '.json')
+    
+    weather_date = datetime.fromisoformat(data['weather']['datetime'])
+    db_file = os.path.join(db_dir, str(weather_date.date()) + '.json')
+    result_data = [data]
+    if os.path.exists(db_file):
+        with open(db_file) as weather_json:
+            existing_data = json.load(weather_json)
+            result_data = existing_data + result_data
     with open(db_file, 'w') as weather_json:
-        json.dump(data, weather_json, indent=3)
+        json.dump(result_data, weather_json, indent=3)
 
 
 api_key = get_api_key()
