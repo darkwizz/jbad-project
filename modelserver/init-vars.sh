@@ -8,7 +8,10 @@ export EXPIRE_TIME_MINUTES=30
 export REFRESH_TIME_MINUTES=5  # 15
 
 
-API_KEY_PATH=../weather-api.key
+if [[ -z $API_KEY_PATH ]] ; then
+	API_KEY_PATH=../weather-api.key
+fi
+
 if [[ -f $API_KEY_PATH ]] ; then
 	export API_KEY=`cat $API_KEY_PATH`
 fi
