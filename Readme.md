@@ -81,7 +81,12 @@ To be able to run any `.py` in the project tree (not only `visualweather.py`, wh
 
 ### Changelog
 
-#### Version 0.4 (in progress)
+#### Version 0.5 (in progress)
+
+* having a weather JSON DB implement a data access on **model server**;
+* remove all mock data and
+
+#### Version 0.4
 
 * a script which should retrieve and store weather data is prepared and can be set up to be executed periodically;
 * key storage logic is implemented on the _dispatcher server_ side;
