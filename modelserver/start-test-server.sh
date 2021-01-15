@@ -10,7 +10,7 @@ fi
 
 if [[ `redis-cli ping 2> /dev/null` ]] ; then
 	SERVER_KEY="city_$CITY_ID"
-	redis-cli del $SERVER_KEY
+	redis-cli del $SERVER_KEY 2> /dev/null
 	redis-cli hset $SERVER_KEY name $CITY_NAME url $MODEL_SERVER_URL id $CITY_ID
 	
 	# CRON_ALLOW=/etc/cron.allow
@@ -26,7 +26,7 @@ if [[ `redis-cli ping 2> /dev/null` ]] ; then
 	# echo $CMD_PATH
 	echo "*/$REFRESH_TIME_MINUTES * * * * $CMD_PATH $CITY_ID $EXPIRE_TIME_MINUTES $REDIS_CLI" > $TEMP_CRON
 	crontab -u $USER $TEMP_CRON
-	# rm $TEMP_CRON
+	rm $TEMP_CRON
 	# end
 fi
 
@@ -36,4 +36,5 @@ flask run -p 7722
 if [[ -n $ORIG_CRON ]] ; then
 	crontab -u $USER $ORIG_CRON
 	redis-cli del $SERVER_KEY
+	rm $ORIG_CRON
 fi

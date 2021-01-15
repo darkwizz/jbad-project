@@ -1,7 +1,11 @@
 import urllib.parse as urlparse
 import os
+import requests
+from http import HTTPStatus
 from urllib.error import URLError
 from redis import Redis
+
+from errors import ModelServerException
 
 
 def url_valid(url):
@@ -48,6 +52,18 @@ class ModelProxy:
             raise URLError('Invalid model server address')
 
         self._model_address = model_address
+    
+    def get_city_current_weather(self):
+        url = urlparse.urljoin(self._model_address, '/weather/current')
+        response = requests.get(url)
+        if response.status_code // 500 == 1:
+            raise ModelServerException( \
+                'Internal error on the upstream server', \
+                HTTPStatus.BAD_GATEWAY)
+        elif response.status_code // 400 == 1:
+            raise Exception('This server sends wrong data')
+        result = response.json()
+        return result
     
     def get_city_weather(self):
         return TEMP_HOURLY_WEATHER_DATA

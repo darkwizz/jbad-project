@@ -7,7 +7,7 @@ from datetime import date
 
 app = Flask(__name__)
 
-@app.route('/weather/history/current')
+@app.route('/weather/current')
 def get_current_weather_data():
     adapter = get_json_db_adapter()
     result = adapter.get_current_weather()
