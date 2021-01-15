@@ -7,6 +7,9 @@ export MODEL_SERVER_URL=localhost:7722
 export EXPIRE_TIME_MINUTES=30
 export REFRESH_TIME_MINUTES=5  # 15
 
+if [[ -z $WEATHER_DB_PATH ]] ; then
+	export WEATHER_DB_PATH=weather-db
+fi
 
 if [[ -z $API_KEY_PATH ]] ; then
 	API_KEY_PATH=../weather-api.key
