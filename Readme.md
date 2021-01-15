@@ -84,7 +84,7 @@ To be able to run any `.py` in the project tree (not only `visualweather.py`, wh
 #### Version 0.5 (in progress)
 
 * having a weather JSON DB implement a data access on **model server**;
-* remove all mock data and
+* remove all mock data and prepare a reacher API for data requests - get current weather and get weather for date range;
 
 #### Version 0.4
 
