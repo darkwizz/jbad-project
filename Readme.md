@@ -81,7 +81,16 @@ To be able to run any `.py` in the project tree (not only `visualweather.py`, wh
 
 ### Changelog
 
-#### Version 0.5 (in progress)
+#### Version 0.6 (in progress)
+
+* enrich UI:
+  * make visualization submenu with not only selecting a separate field and visualizing it;
+  * provide user-friendly field name mapping to show not raw field names, but their clear description;
+  * a separate menu for keeping multiple data chunks and comparing them on the same plots. For now let it be only plotting a chosen parameter;
+  * group data (when visualizing) by hour (for _daily_), by day (for _weekly_ and _monthly_) and show these options for the user;
+  * choose two parameters and make a scatter plot for them;
+
+#### Version 0.5
 
 * having a weather JSON DB implement a data access on **model server**;
 * remove all mock data and prepare a reacher API for data requests - get current weather and get weather for date range;
