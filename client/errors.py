@@ -10,6 +10,10 @@ class ServerError(Exception):
     pass
 
 
+class BadInputError(ServerError):
+    pass
+
+
 class ServerUnavailableError(ServerError):
     pass
 

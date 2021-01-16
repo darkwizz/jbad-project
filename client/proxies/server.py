@@ -1,4 +1,5 @@
-from errors import ServerError, ServerUnavailableError, ConfigurationError
+from client.errors import ServerError, BadInputError, \
+    ServerUnavailableError, ConfigurationError
 
 import requests
 import urllib.parse as urlparse
@@ -18,24 +19,27 @@ class ServerProxy:
         self._server_address = server_address
         self._scheme = scheme
     
-    def _get_request_data(self, path):
+    def _get_request_response_data(self, path, **query_args):
         cities_url = urlparse.urlunparse((self._scheme, \
             self._server_address, path, '', '', ''))
-        response = requests.get(cities_url)
+        response = requests.get(cities_url, params=query_args)
         response_body = response.json()
-        if response.status_code // 200 != 1:
+        if response.status_code // 500 == 1:
             message = response_body.get('message', \
                 f'Server Error {response.status_code}')
             raise ServerError(message)
+        if response.status_code // 400 == 1:
+            message = response_body.get('message')
+            raise BadInputError(message)
         return response_body
     
     def load_available_cities(self):
-        return self._get_request_data('cities')
+        return self._get_request_response_data('cities')
     
     def load_city_current_weather(self, city_id):
         path = f'cities/{urlparse.quote(str(city_id))}/weather/current'
-        return self._get_request_data(path)
+        return self._get_request_response_data(path)
     
-    def load_city_weather(self, city_id):
+    def load_city_weather(self, city_id, start_date, end_date):
         path = f'cities/{urlparse.quote(str(city_id))}/weather'
-        return self._get_request_data(path)
+        return self._get_request_response_data(path, start_date=start_date, end_date=end_date)

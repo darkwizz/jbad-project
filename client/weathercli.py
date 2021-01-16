@@ -2,6 +2,7 @@ from errors import ClientError, DataSynchronizationError, ServerError
 
 import time
 import os
+from datetime import date
 
 
 def print_menu(menu_items):
@@ -21,6 +22,18 @@ def wait():
 def clear_scr():
     if os.name == 'posix':
         os.system('clear')
+
+
+def read_date(prompt_msg):
+    prompt = f'{prompt_msg} (YYYY-MM-DD) or "{CANCEL_CHOICE}" to go back: '
+    date_str = input(prompt)
+    if date_str == CANCEL_CHOICE:
+        return date_str
+    try:
+        _ = date.fromisoformat(date_str)
+        return date_str
+    except ValueError:
+        raise ClientError('Incorrect date format')
 
 
 def read_items_index(items_len, item_name):
@@ -99,7 +112,16 @@ class Client:
         if city_index == CANCEL_CHOICE:
             return
         city = self._session['cities'][city_index - 1]
-        weather = self._server_proxy.load_city_weather(city['id'])
+
+        start_date = read_date('Read start date')
+        if start_date == CANCEL_CHOICE:
+            return
+        
+        end_date = read_date('Read end date')
+        if end_date == CANCEL_CHOICE:
+            return
+        
+        weather = self._server_proxy.load_city_weather(city['id'], start_date, end_date)
         data_hash = self._data_manipulator.update_data(weather)
         self._session['loaded_data_hash'] = data_hash
         print(f'Loaded {len(self._data_manipulator)} rows')
