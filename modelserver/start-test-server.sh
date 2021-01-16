@@ -24,7 +24,7 @@ if [[ `redis-cli ping 2> /dev/null` ]] ; then
 	REDIS_CLI=$( which redis-cli )
 	CMD_PATH=$( realpath server-checkpoint.sh )
 	# echo $CMD_PATH
-	echo "*/$REFRESH_TIME_MINUTES * * * * $CMD_PATH $CITY_ID $EXPIRE_TIME_MINUTES $REDIS_CLI" > $TEMP_CRON
+	echo "*/$REFRESH_TIME_MINUTES * * * * $CMD_PATH $CITY_ID $EXPIRE_TIME_MINUTES $REDIS_CLI" >> $TEMP_CRON
 	crontab -u $USER $TEMP_CRON
 	rm $TEMP_CRON
 	# end

@@ -45,6 +45,10 @@ class KeyStorageProxy:
     def get_model_server_address(self, server_id):
         server_url = self._redis.hget(f'city_{server_id}', 'url')
         return server_url
+    
+    def model_server_available(self, server_id):
+        exists = self._redis.exists(f'city_{server_id}')
+        return bool(exists)
 
 
 class ModelProxy:
