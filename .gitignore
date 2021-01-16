@@ -8,6 +8,7 @@ __pycache__/
 
 # Temp files
 weather-db/
+*cron
 
 # Distribution / packaging
 .Python

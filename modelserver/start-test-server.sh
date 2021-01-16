@@ -7,11 +7,19 @@ if [[ -z $CITY_ID || -z $CITY_NAME || -z $MODEL_SERVER_URL ]] ; then
 	exit
 fi
 
+if [[ -z $EXPIRE_TIME_MINUTES ]] ; then
+	echo "Model server Redis key expire time should be specified"
+	exit
+fi
+
 
 if [[ `redis-cli ping 2> /dev/null` ]] ; then
 	SERVER_KEY="city_$CITY_ID"
 	redis-cli del $SERVER_KEY 2> /dev/null
 	redis-cli hset $SERVER_KEY name $CITY_NAME url $MODEL_SERVER_URL id $CITY_ID
+	
+	EXPIRE_SECONDS=$(( $EXPIRE_TIME_MINUTES * 60 ))
+	redis-cli expire $SERVER_KEY $EXPIRE_SECONDS
 	
 	# CRON_ALLOW=/etc/cron.allow
 	# echo $USER > $CRON_ALLOW

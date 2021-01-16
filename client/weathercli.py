@@ -45,8 +45,9 @@ class Client:
     main_menu_items = [
         '1 - load city list',
         '2 - show loaded cities',
-        '3 - load weather statistics for a city',
-        '4 - visualize last loaded data',
+        '3 - show city current weather',
+        '4 - load historical weather statistics for a city',
+        '5 - visualize last loaded data',
         '0 - exit'
     ]
 
@@ -60,8 +61,9 @@ class Client:
         self._functions = {
             '1': self._load_city_list,
             '2': self._print_loaded_cities,
-            '3': self._load_city_weather,
-            '4': self._visualize_last_lodaded_weather
+            '3': self._print_city_current_weather,
+            '4': self._load_city_weather,
+            '5': self._visualize_last_lodaded_weather
         }
     
     def _load_city_list(self):
@@ -76,15 +78,27 @@ class Client:
         for i, city in enumerate(cities):
             print(f'{i + 1}. {city["name"]}')
     
-    def _load_city_weather(self):
+    def __get_selected_city_index(self):
         cities = self._session.get('cities', [])
         if len(cities) == 0:
             raise ClientError('No available or loaded cities')
         
         city_index = read_items_index(len(cities), 'city')
+        return city_index
+    
+    def _print_city_current_weather(self):
+        city_index = self.__get_selected_city_index()
         if city_index == CANCEL_CHOICE:
             return
-        city = cities[city_index - 1]
+        city = self._session['cities'][city_index - 1]
+        weather = self._server_proxy.load_city_current_weather(city['id'])
+        print(weather)
+    
+    def _load_city_weather(self):
+        city_index = self.__get_selected_city_index()
+        if city_index == CANCEL_CHOICE:
+            return
+        city = self._session['cities'][city_index - 1]
         weather = self._server_proxy.load_city_weather(city['id'])
         data_hash = self._data_manipulator.update_data(weather)
         self._session['loaded_data_hash'] = data_hash

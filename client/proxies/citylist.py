@@ -3,6 +3,9 @@ import os
 
 
 class WeatherAPICity:
+    """
+    Used for proxy stub
+    """
     def __init__(self, city_dict):
         self._city_dict = city_dict or {}
     

@@ -35,5 +35,6 @@ class JsonWeatherDbAdapter:
                 json_path = os.path.join(self._dbpath, weather_json_name)
                 with open(json_path) as weather_json:
                     data = json.load(weather_json)
-                    result.extend(data)
+                    for entry in data:
+                        result.append(entry['weather'])
         return result

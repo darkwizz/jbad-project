@@ -32,6 +32,10 @@ class ServerProxy:
     def load_available_cities(self):
         return self._get_request_data('cities')
     
+    def load_city_current_weather(self, city_id):
+        path = f'cities/{urlparse.quote(str(city_id))}/weather/current'
+        return self._get_request_data(path)
+    
     def load_city_weather(self, city_id):
         path = f'cities/{urlparse.quote(str(city_id))}/weather'
         return self._get_request_data(path)
