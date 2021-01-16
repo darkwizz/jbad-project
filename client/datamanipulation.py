@@ -54,7 +54,7 @@ class DataManipulator:
         x_col = self.date_column
         X = self._data[x_col].apply(lambda x: x.hour)
         Y = self._data[parameter]
-        plt.plot(X, Y)
+        plt.plot(X, Y, marker='o', linestyle='dashed')
         plt.xlabel('Hours')
         plt.ylabel(parameter)
         # plt.legend()

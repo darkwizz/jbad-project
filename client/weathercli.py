@@ -29,6 +29,10 @@ def read_date(prompt_msg):
     date_str = input(prompt)
     if date_str == CANCEL_CHOICE:
         return date_str
+    
+    if not date_str:
+        return None
+    
     try:
         _ = date.fromisoformat(date_str)
         return date_str
@@ -113,11 +117,12 @@ class Client:
             return
         city = self._session['cities'][city_index - 1]
 
-        start_date = read_date('Read start date')
+        print('Leave a date field blank if do not want to specify any date')
+        start_date = read_date('Enter start date')
         if start_date == CANCEL_CHOICE:
             return
         
-        end_date = read_date('Read end date')
+        end_date = read_date('Enter end date')
         if end_date == CANCEL_CHOICE:
             return
         
