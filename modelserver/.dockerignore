@@ -1,0 +1,6 @@
+__pycache__/
+
+weather-db/
+
+start-test-server.sh
+start-weather-mining.sh
