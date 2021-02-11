@@ -1,0 +1,22 @@
+version: '3'
+services:
+  model-warsaw:
+    image: model-img
+    ports:
+      - 7722:7722
+    environment:
+      - CITY_ID=756135
+      - CITY_NAME=Warszawa
+      - MODEL_SERVER_URL=http://localhost:7722
+      - EXPIRE_TIME_MINUTES=30
+      - PORT=7722
+  model-gdansk:
+    image: model-img
+    ports:
+      - 7780:7780
+    environment:
+      - CITY_ID=3099434
+      - CITY_NAME=Gdansk
+      - MODEL_SERVER_URL=http://localhost:7780
+      - EXPIRE_TIME_MINUTES=30
+      - PORT=7780

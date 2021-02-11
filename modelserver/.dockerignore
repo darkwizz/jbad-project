@@ -4,3 +4,4 @@ weather-db/
 
 start-test-server.sh
 start-weather-mining.sh
+mine-weather.sh

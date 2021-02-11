@@ -9,6 +9,9 @@ WORKDIR /home/app
 
 RUN pip install -r requirements.txt
 
-RUN chmod u+x container-deployment/start.sh
+RUN mv container-deployment/start.sh .
+RUN mv container-deployment/mine.sh .
+RUN chmod u+x start.sh
+RUN chmod u+x mine.sh
 
-CMD ["container-deployment/start.sh"]
+CMD ["./start.sh"]
