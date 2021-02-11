@@ -17,7 +17,9 @@ class JsonWeatherDbAdapter:
     def get_current_weather(self):
         list_cmd = f'ls -t -1 {self._dbpath} | head -1'
         with os.popen(list_cmd) as pipe:
-            latest_date_weather_path = list(pipe)[0].strip()
+            pipe_ls = list(pipe)
+            if pipe_ls:
+                latest_date_weather_path = pipe_ls[0].strip()
         weather_path = os.path.join(self._dbpath, latest_date_weather_path)
         with open(weather_path) as latest_weather_data_json:
             data = json.load(latest_weather_data_json)

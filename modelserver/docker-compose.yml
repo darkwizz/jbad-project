@@ -10,6 +10,8 @@ services:
       - MODEL_SERVER_URL=http://localhost:7722
       - EXPIRE_TIME_MINUTES=30
       - PORT=7722
+    volumes:
+      - warsaw-db:/home/app/weather-db
   model-gdansk:
     image: model-img
     ports:
@@ -20,3 +22,10 @@ services:
       - MODEL_SERVER_URL=http://localhost:7780
       - EXPIRE_TIME_MINUTES=30
       - PORT=7780
+    volumes:
+      - gdansk-db:/home/app/weather-db
+volumes:
+  warsaw-db:
+    driver: local
+  gdansk-db:
+    driver: local
