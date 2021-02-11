@@ -14,4 +14,4 @@ RUN mv container-deployment/mine.sh .
 RUN chmod u+x start.sh
 RUN chmod u+x mine.sh
 
-CMD ["./start.sh"]
+CMD crond && ./start.sh

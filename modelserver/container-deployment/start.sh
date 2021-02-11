@@ -6,7 +6,7 @@ CMD_PATH=$( realpath mine.sh )
 
 TEMP_CRON=mycron
 crontab -l > $TEMP_CRON
-echo "*/1 * * * * $CMD_PATH $CITY_ID $PYTHON_PATH $MINING_APP_PATH" >> $TEMP_CRON
+echo "*/15 * * * * $CMD_PATH $CITY_ID $PYTHON_PATH $MINING_APP_PATH" >> $TEMP_CRON
 crontab $TEMP_CRON
 rm $TEMP_CRON
 
@@ -28,6 +28,7 @@ rm $PTH_FILE
 
 export FLASK_ENV=development
 export FLASK_APP=server.py
+export WEATHER_DB_PATH=${MINING_APP_PATH%/*.*}/weather-db
 
 if [[ -z $CITY_ID || -z $CITY_NAME || -z $MODEL_SERVER_URL ]] ; then
 	echo "City ID, city name and model server url should be specified"
