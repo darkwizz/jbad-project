@@ -79,9 +79,16 @@ To be able to run any `.py` in the project tree (not only `visualweather.py`, wh
 
 ---
 
+### Local container deployment
+
+**TODO**
+
+---
+
+
 ### Changelog
 
-#### Version 0.6 (in progress)
+#### Version 0.7
 
 * enrich UI:
   * make visualization submenu with not only selecting a separate field and visualizing it;
@@ -89,6 +96,12 @@ To be able to run any `.py` in the project tree (not only `visualweather.py`, wh
   * a separate menu for keeping multiple data chunks and comparing them on the same plots. For now let it be only plotting a chosen parameter;
   * group data (when visualizing) by hour (for _daily_), by day (for _weekly_ and _monthly_) and show these options for the user;
   * choose two parameters and make a scatter plot for them;
+
+#### Version 0.6 (in progress)
+
+* add possibility to run servers in containers;
+* available `docker-compose` file to start a local deployment where all servers communicate and Redis server is also containerized;
+* retrieved weather data is stored in docker volumes;
 
 #### Version 0.5
 
