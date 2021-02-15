@@ -1,0 +1,14 @@
+version: '3'
+services:
+  dispatcher:
+    image: dispatcher-img
+    ports:
+      - 8888:5637
+    environment:
+      - PORT=5637
+      - STORAGE_HOST=checkpoint
+      - STORAGE_PORT=6379
+  checkpoint:
+    image: redis:6-alpine
+    ports:
+      - 16379:6379
