@@ -1,3 +1,7 @@
+class StorageException(Exception):
+    pass
+
+
 class ModelServerException(Exception):
     def __init__(self, message, http_code):
         self.message = message

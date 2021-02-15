@@ -6,7 +6,8 @@ from urllib.error import URLError
 from redis import Redis
 from datetime import date
 
-from errors import ModelServerException, InvalidInputException
+from errors import ModelServerException, InvalidInputException, \
+    StorageException
 
 
 def url_valid(url):
@@ -49,6 +50,27 @@ class KeyStorageProxy:
     def model_server_available(self, server_id):
         exists = self._redis.exists(f'city_{server_id}')
         return bool(exists)
+    
+    def _set_field_expire(self, key, expire_time):
+        expire_seconds = int(expire_time) * 60
+        self._redis.expire(key, expire_seconds)
+    
+    def register_new_model_server(self, server_id, city_name, model_host, expire_time):
+        if self.model_server_available(server_id):
+            self._redis.delete(key)
+        key = f'city_{server_id}'
+        self._redis.hmset(key, {
+            'id': server_id,
+            'name': city_name,
+            'url': model_host
+        })
+        self._set_field_expire(key, expire_time)
+    
+    def refresh_model_server(self, server_id, expire_time):
+        if not self.model_server_available(server_id):
+            raise StorageException('No such model registered')
+        key = f'city_{server_id}'
+        self._set_field_expire(key, expire_time)
 
 
 class ModelProxy:

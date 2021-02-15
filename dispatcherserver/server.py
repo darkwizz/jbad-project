@@ -1,4 +1,5 @@
-from errors import ModelServerException
+from errors import ModelServerException, StorageException
+from proxy import get_key_storage_proxy
 
 from flask import Flask, jsonify, request
 from http import HTTPStatus
@@ -51,7 +52,6 @@ def ping():
 
 def add_model_entry(refresh_time, model_id):
     data = request.json
-    key = f'city_{model_id}'
     city_name = data.get('name', None)
     if city_name is None:
         return 'City name must be provided', HTTPStatus.BAD_REQUEST
@@ -60,15 +60,17 @@ def add_model_entry(refresh_time, model_id):
         return 'Server hostname must be provided', HTTPStatus.BAD_REQUEST
     sender_scheme = request.scheme
     sender_url = urlparse.urlunparse((sender_scheme, sender_host, '/', '', '', ''))
-    model_entry = {
-        'id': model_id,
-        'name': city_name,
-        'url': sender_url
-    }
+    storage_proxy = get_key_storage_proxy()
+    storage_proxy.register_new_model_server(model_id, city_name, sender_url, refresh_time)
     return {'refresh_time': refresh_time}, HTTPStatus.OK
 
 
 def refresh_model_entry(refresh_time, model_id):
+    storage_proxy = get_key_storage_proxy()
+    try:
+        storage_proxy.refresh_model_server(model_id, refresh_time)
+    except StorageException as ex:
+        return {'message': str(ex)}, HTTPStatus.BAD_REQUEST
     return {}, HTTPStatus.NO_CONTENT
 
 
@@ -85,8 +87,6 @@ def checkpoint(model_id):
 
 @app.route('/cities/')
 def get_available_cities():
-    from proxy import get_key_storage_proxy
-
     storage_proxy = get_key_storage_proxy()
     cities = storage_proxy.get_available_model_servers()
     return jsonify(cities)
