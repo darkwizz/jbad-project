@@ -4,6 +4,8 @@ from flask import Flask, jsonify, request
 from http import HTTPStatus
 from urllib.error import URLError
 from datetime import date
+import os
+import urllib.parse as urlparse
 
 
 app = Flask(__name__)
@@ -45,6 +47,40 @@ def get_model_server_proxy(server_id):
 @app.route('/')
 def ping():
     return '', HTTPStatus.NO_CONTENT
+
+
+def add_model_entry(refresh_time, model_id):
+    data = request.json
+    key = f'city_{model_id}'
+    city_name = data.get('name', None)
+    if city_name is None:
+        return 'City name must be provided', HTTPStatus.BAD_REQUEST
+    sender_host = data.get('host', None)
+    if sender_host is None:
+        return 'Server hostname must be provided', HTTPStatus.BAD_REQUEST
+    sender_scheme = request.scheme
+    sender_url = urlparse.urlunparse((sender_scheme, sender_host, '/', '', '', ''))
+    model_entry = {
+        'id': model_id,
+        'name': city_name,
+        'url': sender_url
+    }
+    return {'refresh_time': refresh_time}, HTTPStatus.OK
+
+
+def refresh_model_entry(refresh_time, model_id):
+    return {}, HTTPStatus.NO_CONTENT
+
+
+@app.route('/models/<int:model_id>/checkpoint', methods=['POST', 'PUT'])
+def checkpoint(model_id):
+    refresh_time = os.getenv('REFRESH_TIME', '30')
+    if request.method == 'POST':
+        return add_model_entry(refresh_time, model_id)
+    elif request.method == 'PUT':
+        return refresh_model_entry(refresh_time, model_id)
+    else:
+        return '', HTTPStatus.METHOD_NOT_ALLOWED
 
 
 @app.route('/cities/')

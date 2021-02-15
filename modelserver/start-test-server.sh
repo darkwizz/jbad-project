@@ -13,13 +13,13 @@ if [[ -z $EXPIRE_TIME_MINUTES ]] ; then
 fi
 
 
-if [[ `redis-cli ping 2> /dev/null` ]] ; then
+if [[ `redis-cli -p $STORAGE_PORT ping 2> /dev/null` ]] ; then
 	SERVER_KEY="city_$CITY_ID"
-	redis-cli del $SERVER_KEY 2> /dev/null
-	redis-cli hset $SERVER_KEY name $CITY_NAME url $MODEL_SERVER_URL id $CITY_ID
+	redis-cli -p $STORAGE_PORT del $SERVER_KEY 2> /dev/null
+	redis-cli -p $STORAGE_PORT hset $SERVER_KEY name $CITY_NAME url $MODEL_SERVER_URL id $CITY_ID
 	
 	EXPIRE_SECONDS=$(( $EXPIRE_TIME_MINUTES * 60 ))
-	redis-cli expire $SERVER_KEY $EXPIRE_SECONDS
+	redis-cli -p $STORAGE_PORT expire $SERVER_KEY $EXPIRE_SECONDS
 	
 	# CRON_ALLOW=/etc/cron.allow
 	# echo $USER > $CRON_ALLOW
