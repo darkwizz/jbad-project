@@ -12,6 +12,8 @@ services:
       - PORT=7722
     volumes:
       - warsaw-db:/home/app/weather-db
+    networks:
+      - servers
   model-gdansk:
     image: model-img
     ports:
@@ -24,8 +26,14 @@ services:
       - PORT=7780
     volumes:
       - gdansk-db:/home/app/weather-db
+    networks:
+      - servers
 volumes:
   warsaw-db:
     driver: local
   gdansk-db:
     driver: local
+networks:
+  servers:
+    external:
+      name: servers

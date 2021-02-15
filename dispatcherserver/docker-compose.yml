@@ -8,7 +8,15 @@ services:
       - PORT=5637
       - STORAGE_HOST=checkpoint
       - STORAGE_PORT=6379
+    networks:
+      - servers
   checkpoint:
     image: redis:6-alpine
     ports:
       - 16379:6379
+    networks:
+      - servers
+networks:
+  servers:
+    external:
+      name: servers
