@@ -3,12 +3,16 @@ import argparse
 import os
 
 
+def get_checkpoint_url(dispatcher_url, city_id):
+    return os.path.join(dispatcher_url, 'models', city_id, 'checkpoint')
+
+
 def register_model_in_dispatcher(city_id, dispatcher_url, city_name, model_url):
     request_body = {
         'name': city_name,
         'host': model_url
     }
-    url = os.path.join(dispatcher_url, 'models', city_id, 'checkpoint')
+    url = get_checkpoint_url(dispatcher_url, city_id)
     response = requests.post(url, json=request_body)
     if response.status_code == 200:
         result = response.json()
@@ -17,7 +21,7 @@ def register_model_in_dispatcher(city_id, dispatcher_url, city_name, model_url):
     
 
 def refresh_model_in_dispatcher(city_id, dispatcher_url):
-    url = os.path.join(dispatcher_url, 'models', city_id, 'checkpount')
+    url = get_checkpoint_url(dispatcher_url, city_id)
     response = requests.put(url)
     if response.status_code != 204:
         raise Exception(f'Some error happened.\n{str(response.text)}')
