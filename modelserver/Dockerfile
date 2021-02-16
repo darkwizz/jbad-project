@@ -10,8 +10,8 @@ WORKDIR /home/app
 RUN pip install -r requirements.txt
 
 RUN mkdir weather-db
-RUN mv container-deployment/start.sh .
-RUN mv container-deployment/mine.sh .
+RUN mv container-deployment/* .
+RUN rm -r container-deployment
 RUN chmod u+x start.sh
 RUN chmod u+x mine.sh
 

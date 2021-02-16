@@ -56,9 +56,9 @@ class KeyStorageProxy:
         self._redis.expire(key, expire_seconds)
     
     def register_new_model_server(self, server_id, city_name, model_host, expire_time):
+        key = f'city_{server_id}'
         if self.model_server_available(server_id):
             self._redis.delete(key)
-        key = f'city_{server_id}'
         self._redis.hmset(key, {
             'id': server_id,
             'name': city_name,

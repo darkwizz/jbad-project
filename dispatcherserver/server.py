@@ -58,10 +58,8 @@ def add_model_entry(refresh_time, model_id):
     sender_host = data.get('host', None)
     if sender_host is None:
         return 'Server hostname must be provided', HTTPStatus.BAD_REQUEST
-    sender_scheme = request.scheme
-    sender_url = urlparse.urlunparse((sender_scheme, sender_host, '/', '', '', ''))
     storage_proxy = get_key_storage_proxy()
-    storage_proxy.register_new_model_server(model_id, city_name, sender_url, refresh_time)
+    storage_proxy.register_new_model_server(model_id, city_name, sender_host, refresh_time)
     return {'refresh_time': refresh_time}, HTTPStatus.OK
 
 

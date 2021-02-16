@@ -8,6 +8,7 @@ services:
       - PORT=5637
       - STORAGE_HOST=checkpoint
       - STORAGE_PORT=6379
+      - REFRESH_TIME=30
     networks:
       - servers
   checkpoint:
