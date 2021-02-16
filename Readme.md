@@ -81,14 +81,45 @@ To be able to run any `.py` in the project tree (not only `visualweather.py`, wh
 
 ### Local container deployment
 
-**TODO**
+* better to start  **dispatcher-server** first, because it also starts Redis server
+* but before deploying there should be a _docker network_ created:
+
+```yaml
+# from docker-compose.yml, both components have it
+networks:
+  servers:
+    external:
+      name: servers  # this network should exist
+```
+
+to create it:
+
+```bash
+~/jbad-projects$ docker network create servers
+```
+
+and then start everything:
+
+```bash
+~/jbad-project$ cd dispatcherserver
+~/jbad-project/dispatcherserver$ docker build -t \
+    dispatcher-img .
+~/jbad-project/dispatcherserver$ docker-compose -f \
+    docker-compose.yml up -d
+# to start containers in 'detach mode'
+
+~/jbad-project/dispatcherserver$ cd ../modelserver
+~/jbad-project/modelserver$ docker build -t \
+    model-img .
+~/jbad-project/modelserver$ docker-compose -f \
+    docker-compose.yml up -d
+```
 
 ---
 
-
 ### Changelog
 
-#### Version 0.7
+#### Version 0.7 (in progress)
 
 * enrich UI:
   * make visualization submenu with not only selecting a separate field and visualizing it;
@@ -97,11 +128,12 @@ To be able to run any `.py` in the project tree (not only `visualweather.py`, wh
   * group data (when visualizing) by hour (for _daily_), by day (for _weekly_ and _monthly_) and show these options for the user;
   * choose two parameters and make a scatter plot for them;
 
-#### Version 0.6 (in progress)
+#### Version 0.6
 
 * add possibility to run servers in containers;
 * available `docker-compose` file to start a local deployment where all servers communicate and Redis server is also containerized;
 * retrieved weather data is stored in docker volumes;
+* now model servers register themselves through the dispatcher;
 
 #### Version 0.5
 
