@@ -9,6 +9,7 @@ services:
       - STORAGE_HOST=checkpoint
       - STORAGE_PORT=6379
       - REFRESH_TIME=30
+      - EXPIRE_TIME=45
     networks:
       - servers
   checkpoint:

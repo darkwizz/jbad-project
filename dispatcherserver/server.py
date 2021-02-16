@@ -50,7 +50,7 @@ def ping():
     return '', HTTPStatus.NO_CONTENT
 
 
-def add_model_entry(refresh_time, model_id):
+def add_model_entry(expire_time, model_id):
     data = request.json
     city_name = data.get('name', None)
     if city_name is None:
@@ -59,14 +59,15 @@ def add_model_entry(refresh_time, model_id):
     if sender_host is None:
         return 'Server hostname must be provided', HTTPStatus.BAD_REQUEST
     storage_proxy = get_key_storage_proxy()
-    storage_proxy.register_new_model_server(model_id, city_name, sender_host, refresh_time)
+    storage_proxy.register_new_model_server(model_id, city_name, sender_host, expire_time)
+    refresh_time = os.getenv('REFRESH_TIME', '30')
     return {'refresh_time': refresh_time}, HTTPStatus.OK
 
 
-def refresh_model_entry(refresh_time, model_id):
+def refresh_model_entry(expire_time, model_id):
     storage_proxy = get_key_storage_proxy()
     try:
-        storage_proxy.refresh_model_server(model_id, refresh_time)
+        storage_proxy.refresh_model_server(model_id, expire_time)
     except StorageException as ex:
         return {'message': str(ex)}, HTTPStatus.BAD_REQUEST
     return {}, HTTPStatus.NO_CONTENT
@@ -74,11 +75,11 @@ def refresh_model_entry(refresh_time, model_id):
 
 @app.route('/models/<int:model_id>/checkpoint', methods=['POST', 'PUT'])
 def checkpoint(model_id):
-    refresh_time = os.getenv('REFRESH_TIME', '30')
+    expire_time = os.getenv('EXPIRE_TIME', '45')
     if request.method == 'POST':
-        return add_model_entry(refresh_time, model_id)
+        return add_model_entry(expire_time, model_id)
     elif request.method == 'PUT':
-        return refresh_model_entry(refresh_time, model_id)
+        return refresh_model_entry(expire_time, model_id)
     else:
         return '', HTTPStatus.METHOD_NOT_ALLOWED
 
