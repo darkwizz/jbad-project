@@ -1,7 +1,7 @@
 version: '3'
 services:
   model-warsaw:
-    image: model-img
+    image: ${MODEL_IMAGE}
     ports:
       - 7722:7722
     environment:
@@ -15,7 +15,7 @@ services:
     networks:
       - servers
   model-gdansk:
-    image: model-img
+    image: ${MODEL_IMAGE}
     ports:
       - 7780:7780
     environment:
