@@ -98,7 +98,18 @@ to create it:
 ~/jbad-projects$ docker network create servers
 ```
 
-and then start everything:
+* since in both `docker-compose` .yml files for servers images have been put ENV variables the values must be provided:
+
+```bash
+export DISPATCHER_IMAGE=<value>
+export MODEL_IMAGE=<value>
+```
+  * one can build images locally (from the corresponding Dockerfiles) and pass images' names;
+  * or to provide the image name with its repository:
+> \<repo_url\>/\<image-name\>:\<tag\>
+
+
+then start everything:
 
 ```bash
 ~/jbad-project$ cd dispatcherserver
